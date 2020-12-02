@@ -1,7 +1,7 @@
 
 fn part1(inp: &str) -> Result<i64, ()> {
-    let nums = inp.lines().map(|i| i.parse()).collect::<Result<Vec<i64>, _>>().unwrap();
-    
+    let nums = inp.lines().map(str::parse).collect::<Result<Vec<i64>, _>>().unwrap();
+
     for i in &nums {
         for j in &nums {
             if i + j == 2020 {
@@ -14,7 +14,7 @@ fn part1(inp: &str) -> Result<i64, ()> {
 }
 
 fn part2(inp: &str) -> Result<i64, ()> {
-    let nums = inp.lines().map(|i| i.parse()).collect::<Result<Vec<i64>, _>>().unwrap();
+    let nums = inp.lines().map(str::parse).collect::<Result<Vec<i64>, _>>().unwrap();
 
     for i in &nums {
         for j in &nums {

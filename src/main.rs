@@ -1,8 +1,42 @@
+#[allow(unused)]
+
 mod day1;
 mod day2;
 mod day3;
 mod day4;
 
+use clap::{App, Arg};
+
+macro_rules! day {
+    ($fmt: expr, $($day: ident)*,) => {
+        match ($fmt as &str) {
+            $(
+                stringify!($day) => $day::main(),
+            )*
+            _ =>  eprintln!("Error: Day not found (yet?)."),
+        }
+    }
+}
+
 fn main() {
-    day1::main();
+    let matches = App::new("Advent of Code")
+        .arg(
+            Arg::with_name("day")
+            .short("d")
+            .long("day")
+            .help("The day number to execute")
+            .takes_value(true)
+        ).get_matches();
+
+        
+
+    match matches.value_of("day") {
+        None => eprintln!("Error: Argument 'day' not found."),
+        Some(i) => match i.parse::<i64>() {
+            Err(_) => eprintln!("Error: Couldn't parse argument 'day' as integer."),
+            Ok(i) => day!(&format!("day{}", i),
+                day2,
+            )
+        }
+    }
 }
