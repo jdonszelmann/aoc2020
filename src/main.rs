@@ -8,7 +8,7 @@ mod day4;
 use clap::{App, Arg};
 
 macro_rules! day {
-    ($fmt: expr, $($day: ident)*,) => {
+    ($fmt: expr, $($day: ident),*) => {
         match ($fmt as &str) {
             $(
                 stringify!($day) => $day::main(),
@@ -35,7 +35,8 @@ fn main() {
         Some(i) => match i.parse::<i64>() {
             Err(_) => eprintln!("Error: Couldn't parse argument 'day' as integer."),
             Ok(i) => day!(&format!("day{}", i),
-                day2,
+                day1, 
+                day2
             )
         }
     }
