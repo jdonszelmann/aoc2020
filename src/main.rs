@@ -36,7 +36,8 @@ fn main() {
             Err(_) => eprintln!("Error: Couldn't parse argument 'day' as integer."),
             Ok(i) => day!(&format!("day{}", i),
                 day1, 
-                day2
+                day2,
+                day3
             )
         }
     }
