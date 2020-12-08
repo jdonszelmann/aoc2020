@@ -16,7 +16,7 @@ fn parse_bagline(inp: &str) -> Bag {
        
         if right.trim() != "no other bags." {
             for i in right.trim().split(",") {
-                if let [number, rest@.., last] = i.trim().split(" ").collect::<Vec<_>>().as_slice(){
+                if let [number, rest@.., _] = i.trim().split(" ").collect::<Vec<_>>().as_slice(){
                     let res = rest.iter().join(" ");
                     
                     bag.contents.insert(res, number.parse().unwrap());
@@ -35,7 +35,7 @@ fn has_gold(bag: &Bag, bags: &HashMap<String, Bag>) -> bool {
     queue.push_back(bag);
 
     while let Some(i) = queue.pop_front() {
-        for (bagtype, number) in &i.contents {
+        for (bagtype, _) in &i.contents {
             if bagtype == "shiny gold" {
                 return true;
             }
@@ -62,7 +62,7 @@ fn part1(inp: &str) -> Result<i64, ()> {
     }
 
     let mut count = 0;
-    for (name, val) in &bags {
+    for (_, val) in &bags {
         if has_gold(val, &bags) {
             count += 1;
         }
