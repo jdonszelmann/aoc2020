@@ -8,6 +8,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 use clap::{App, Arg};
 
@@ -46,7 +47,8 @@ fn main() {
                 day5,
                 day6,
                 day7,
-                day8
+                day8,
+                day9
             )
         }
     }
