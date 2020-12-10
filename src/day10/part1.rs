@@ -1,13 +1,11 @@
 use std::collections::HashMap;
+use std::iter;
 
 fn part1(inp: &str) -> Result<i64, ()> {
     let mut nums = inp.lines().filter(|i| !i.trim().is_empty()).map(|i| i.parse().unwrap()).collect::<Vec<i64>>();
 
     nums.sort();
-        
-
-    let chain = find(&nums, 0, *nums.iter().max().unwrap()).unwrap();
-    
+    let chain: Vec<_> = find(&nums, 0, *nums.iter().max().unwrap()).unwrap().collect(); 
     let (ones, threes) = differences(&chain);
 
     return Ok(ones * threes)
@@ -15,81 +13,54 @@ fn part1(inp: &str) -> Result<i64, ()> {
 
 
 fn differences(chain: &[i64]) -> (i64, i64) {
-    let mut prev = chain[0];
-
-    let mut ones = 0;
-    let mut threes = 0;
-
-    for i in chain[1..].iter() {
-        if i - prev == 1 {
-            ones += 1;
+    chain.windows(2).fold((0, 0), |(ones, threes), win| {
+        match win[1] - win[0]{
+            1 => (ones + 1, threes),
+            3 => (ones, threes + 1),
+            _ => (ones, threes),
         }
-        
-        if i - prev == 3 {
-            threes += 1;
-        }
-
-        prev = *i;
-    }
-
-    (ones, threes)
+    })
 }
 
 
-fn find(nums: &[i64], curr: i64, max: i64) -> Result<Vec<i64>, ()> {
-    let mut chain = vec![curr];
-
-    let mut added = 0;
-
+fn find(nums: &[i64], curr: i64, max: i64) -> Result<Box<dyn Iterator<Item=i64>>, ()> {
     if curr == max {
-        return Ok(vec![max, max + 3]);
+        Ok(Box::new(vec![max, max + 3].into_iter()))
+    } else {
+        Ok(Box::new(
+            iter::once(curr).chain(
+                nums.iter()
+                .filter(|&&i| (1..=3).contains(&(i - curr)))
+                .filter_map(|i| find(nums, *i, max).ok())
+                .next().ok_or(())?.chain(iter::once(curr))
+            )
+        ))
     }
-
-    for i in nums {
-
-        if i - curr > 0 && i - curr <= 3 && added != 1 {
-            if let Ok(newchain) = find(nums, *i, max) {
-                chain.extend(newchain.into_iter());
-                added += 1;
-                break;
-            }
-        }
-    }
-
-    if added == 0{
-        return Err(())
-    }
-
-    Ok(chain)
 }
 
-fn find2(nums: &[i64], curr: i64, max: i64, cache: &mut HashMap<i64, i64>) -> i64 {
-    let mut num = 0;
-
+fn count(nums: &[i64], curr: i64, max: i64, cache: &mut HashMap<i64, i64>) -> i64 {
     if let Some(i) = cache.get(&curr) {
-        return *i;
+        *i
+    } else if curr == max {
+        1
+    } else {
+         let res = nums.iter()
+            .filter(|&&i| (1..=3).contains(&(i - curr)))
+            .map(|i| count(nums, *i, max, cache))
+            .sum();
+        
+        cache.insert(curr, res);
+
+        res
     }
-
-    if curr == max {
-        return 1;
-    }
-
-    for i in nums {
-        if i - curr > 0 && i - curr <= 3 {
-            num += find2(nums, *i, max, cache);
-        }
-    }
-
-    cache.insert(curr, num);
-
-    num
 }
+
 
 fn part2(inp: &str) -> Result<i64, ()> {
     let nums = inp.lines().filter(|i| !i.trim().is_empty()).map(|i| i.parse().unwrap()).collect::<Vec<i64>>();
 
     let mut cache = HashMap::new();
-    Ok(find2(&nums, 0, *nums.iter().max().unwrap(), &mut cache))
+    Ok(count(&nums, 0, *nums.iter().max().unwrap(), &mut cache))
 }
 
 

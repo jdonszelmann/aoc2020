@@ -11,3 +11,4 @@ clap = "2.33.3"
 serde = {version = "1.0.117", features=["derive"]}
 itertools = "0.9"
 typenum = "1.12.0"
+cached = {version="0.22", default-features=false, features=["proc_macro"]}
