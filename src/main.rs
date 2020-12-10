@@ -14,11 +14,14 @@ mod day10;
 use clap::{App, Arg};
 
 macro_rules! day {
-    ($fmt: expr, $($day: ident),*) => {
+    ($fmt: expr, $($day: ident),* $(,)?) => {
         match ($fmt as &str) {
             $(
                 stringify!($day) => $day::main(),
             )*
+            "dayall" => {$(
+                $day::main();
+            )*}
             _ =>  eprintln!("Error: Day not found (yet?)."),
         }
     }
@@ -34,13 +37,11 @@ fn main() {
             .takes_value(true)
         ).get_matches();
 
-        
+     
 
     match matches.value_of("day") {
         None => eprintln!("Error: Argument 'day' not found."),
-        Some(i) => match i.parse::<i64>() {
-            Err(_) => eprintln!("Error: Couldn't parse argument 'day' as integer."),
-            Ok(i) => day!(&format!("day{}", i),
+        Some(i) => day!(&format!("day{}", i),
                 day1, 
                 day2,
                 day3,
@@ -50,8 +51,7 @@ fn main() {
                 day7,
                 day8,
                 day9,
-                day10
-            )
-        }
+                day10,
+        ) 
     }
 }

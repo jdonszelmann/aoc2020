@@ -48,8 +48,6 @@ fn part2(inp: &str) -> Result<i64, ()> {
     }
 
      for i in 0..128 {
-        println!("{:?}", rows[i]);
-
         for j in 0..8 {
             if rows[i][j] == 0 && !empty(&rows[i]) && i < rows.len() && !empty(&rows[i + 1]) && i > 0 && !empty(&rows[i - 1]){
                 return Ok((i * 8 + j) as i64)

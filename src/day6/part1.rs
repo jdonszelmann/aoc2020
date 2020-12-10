@@ -14,8 +14,6 @@ fn part1(inp: &str) -> Result<i64, ()> {
         }
         
         total += set.len();
-        println!("{}", set.len());
-
     }
 
     Ok(total as i64)

@@ -28,7 +28,6 @@ fn part1(inp: &str) -> Result<i64, ()> {
         }
     }
 
-    println!("{}", valid);
     Ok(valid)
 }
 
@@ -54,8 +53,6 @@ fn parse_color(v: &str) -> bool {
 }
 
 fn validate(pp: &HashMap<&str, &str>) -> bool {
-    println!("{:?}", pp);
-
     if !all_fields(pp) {
         return false;
     }
@@ -96,7 +93,6 @@ fn part2(inp: &str) -> Result<i64, ()> {
         }
     }
 
-    println!("{}", valid);
     Ok(valid)
 }
 
