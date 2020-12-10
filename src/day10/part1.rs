@@ -1,41 +1,20 @@
 use std::collections::HashMap;
-use std::iter;
 
 fn part1(inp: &str) -> Result<i64, ()> {
     let mut nums = inp.lines().filter(|i| !i.trim().is_empty()).map(|i| i.parse().unwrap()).collect::<Vec<i64>>();
 
+    nums.insert(0, 0);
+
     nums.sort();
-    let chain: Vec<_> = find(&nums, 0, *nums.iter().max().unwrap()).unwrap().collect(); 
-    let (ones, threes) = differences(&chain);
-
-    return Ok(ones * threes)
-}
-
-
-fn differences(chain: &[i64]) -> (i64, i64) {
-    chain.windows(2).fold((0, 0), |(ones, threes), win| {
+    let (ones, threes) = nums.windows(2).fold((0, 0), |(ones, threes), win| {
         match win[1] - win[0]{
             1 => (ones + 1, threes),
             3 => (ones, threes + 1),
             _ => (ones, threes),
         }
-    })
-}
+    });
 
-
-fn find(nums: &[i64], curr: i64, max: i64) -> Result<Box<dyn Iterator<Item=i64>>, ()> {
-    if curr == max {
-        Ok(Box::new(vec![max, max + 3].into_iter()))
-    } else {
-        Ok(Box::new(
-            iter::once(curr).chain(
-                nums.iter()
-                .filter(|&&i| (1..=3).contains(&(i - curr)))
-                .filter_map(|i| find(nums, *i, max).ok())
-                .next().ok_or(())?
-            )
-        ))
-    }
+    Ok(ones * (threes + 1))
 }
 
 fn count(nums: &[i64], curr: i64, max: i64, cache: &mut HashMap<i64, i64>) -> i64 {
