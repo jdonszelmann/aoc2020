@@ -32,7 +32,7 @@ fn find(nums: &[i64], curr: i64, max: i64) -> Result<Box<dyn Iterator<Item=i64>>
                 nums.iter()
                 .filter(|&&i| (1..=3).contains(&(i - curr)))
                 .filter_map(|i| find(nums, *i, max).ok())
-                .next().ok_or(())?.chain(iter::once(curr))
+                .next().ok_or(())?
             )
         ))
     }
